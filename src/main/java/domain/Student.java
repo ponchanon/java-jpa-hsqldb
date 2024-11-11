@@ -64,7 +64,7 @@ public class Student {
 		this.phone = phone;
 	}
 
-	public void setCreditCard(Address address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
 

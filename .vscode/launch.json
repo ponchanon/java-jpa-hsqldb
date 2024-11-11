@@ -9,6 +9,26 @@
             "projectName": "CustomerApplication",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-CustomerApplication<CustomerApplication>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "app.CustomerApplication",
+            "projectName": "CustomerApplication",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-StudentApplication<CustomerApplication>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "app.StudentApplication",
+            "projectName": "CustomerApplication",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

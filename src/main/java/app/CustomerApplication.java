@@ -1,68 +1,81 @@
 package app;
 
 import java.util.List;
+import java.util.Random;
 
-import domain.CreditCard;
+import domain.Address;
+import domain.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import repositories.CustomerRepository;
-import domain.Customer;
+import repositories.StudentRepository;
 
 @SpringBootApplication
 @EnableJpaRepositories("repositories")
 @EntityScan("domain") 
 public class CustomerApplication implements CommandLineRunner{
-	
-	@Autowired
-	CustomerRepository customerrepository;
+    @Autowired
+    StudentRepository studentRepository;
 
-	public static void main(String[] args) {
-		SpringApplication.run(CustomerApplication.class, args);
-	}
+    @Profile("student")
+    public static void main(String[] args) {
+        SpringApplication.run(CustomerApplication.class, args);
+    }
 
-	@Override
-	public void run(String... args) throws Exception {
-		// create customer
-		Customer customer = new Customer(101,"John doe", "johnd@acme.com", "0622341678");
-		CreditCard creditCard = new CreditCard("12324564321", "Visa", "11/23");
-		customer.setCreditCard(creditCard);
-		customerrepository.save(customer);
-		customer = new Customer(109,"John Jones", "jones@acme.com", "0624321234");
-		creditCard = new CreditCard("657483342", "Visa", "09/23");
-		customer.setCreditCard(creditCard);
-		customerrepository.save(customer);
-		customer = new Customer(66,"James Johnson", "jj123@acme.com", "068633452");
-		creditCard = new CreditCard("99876549876", "MasterCard", "01/24");
-		customer.setCreditCard(creditCard);
-		customerrepository.save(customer);
+    @Override
+    public void run(String... args) throws Exception {
+        
+        Student student;
+        Random random = new Random();
 
-//get customers
-		System.out.println(customerrepository.findById(66).get());
-		System.out.println(customerrepository.findById(101).get());
-		System.out.println("-----------All customers ----------------");
-		System.out.println(customerrepository.findAll());
-		//update customer
-		customer = customerrepository.findById(101).get();
-		customer.setEmail("jd@gmail.com");
-		customerrepository.save(customer);
-		System.out.println("-----------find by phone ----------------");
-		System.out.println(customerrepository.findByPhone("0622341678"));
-		System.out.println("-----------find by email ----------------");
-		System.out.println(customerrepository.findCustomerWithEmail("jj123@acme.com"));
-		System.out.println("-----------find customers with a certain type of creditcard ----------------");
-		List<Customer> customers = customerrepository.findCustomerWithCreditCardType("Visa");
-		for (Customer cust : customers){
-			System.out.println(cust);
+        for (int i = 0; i < 5; i++) {
+            // Generate random student details
+            int id = 1000 + i;
+            String name = "Student" + i;
+            String phone = "06223" + (i * 10000);
+            String email = "student" + id + "@example.com";
+
+            // Create random address
+            String street = (10 + i) + "th Street";
+            String city = random.nextBoolean() ? "Queens" : "Brooklyn";
+            String zipCode = "11" + (100 + i);
+
+            // Create student and address
+            student = new Student(id, name, phone, email);
+            Address address = new Address(street, city, zipCode);
+            student.setAddress(address);
+
+            // Save to the repository
+            studentRepository.save(student);
+
+            System.out.println("Inserted Student: " + student);
+        }
+
+
+        //get students
+        System.out.println("-----------Get all students ----------------");
+		System.out.println(studentRepository.findAll());
+        System.out.println("-----------Get all students with a certain name ----------------");
+		System.out.println(studentRepository.findByName(""));
+		System.out.println("-----------Get a student with a certain phoneNumber ----------------");
+		System.out.println(studentRepository.findByPhone("0622330000"));
+        System.out.println("-----------Get all students from a certain city ----------------");
+		List<Student> students = studentRepository.findStudentWithCity("Queens");
+		for (Student std : students){
+			System.out.println(std);
 		}
 
-		System.out.println("-----------find by name ----------------");
-		System.out.println(customerrepository.findByName("John doe"));
 		
-	}
-
+		//update student
+		student = studentRepository.findById(1001).get();
+		student.setEmail("jd@gmail.com");
+		studentRepository.save(student);
+		System.out.println(student);
+		
+    }
 }
